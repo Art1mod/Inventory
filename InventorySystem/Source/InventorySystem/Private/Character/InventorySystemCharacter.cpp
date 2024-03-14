@@ -1,7 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-//engine 
+//game
 #include "Character/InventorySystemCharacter.h"
+
+
+//engine 
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -11,11 +14,14 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
-
+#include "DrawDebugHelpers.h"
 
 
 AInventorySystemCharacter::AInventorySystemCharacter()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	
+	
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		
@@ -47,9 +53,25 @@ AInventorySystemCharacter::AInventorySystemCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	//Interaction time and distance
+	InteractionCheckFrequency = 0.1;
+	InteractionCheckDistance = 300.f;
+
+	//LineTrace start location 
+	BaseEyeHeight = 74.f;
+
 }
+
+void AInventorySystemCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (GetWorld()->TimeSince(InteractionData.LastInteractionCheckTime > InteractionCheckFrequency))
+	{
+		PerformInteractionCheck();
+	}
+}
+
 
 void AInventorySystemCharacter::BeginPlay()
 {
@@ -85,6 +107,66 @@ void AInventorySystemCharacter::SetupPlayerInputComponent(class UInputComponent*
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AInventorySystemCharacter::Look);
 
 	}
+
+}
+
+void AInventorySystemCharacter::PerformInteractionCheck()
+{
+	InteractionData.LastInteractionCheckTime = GetWorld()->GetTimeSeconds();
+
+	FVector TraceStart {GetPawnViewLocation()};
+	FVector TraceEnd {TraceStart + (GetViewRotation().Vector() * InteractionCheckDistance)};
+
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 1.f, 0, 2.f);
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+	FHitResult TraceHit;
+
+	if (GetWorld()->LineTraceSingleByChannel(TraceHit, TraceStart, TraceEnd, ECC_Visibility, QueryParams)) 
+	{ 
+		 if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass())) 
+		 {
+			 const float Distance = (TraceStart - TraceHit.ImpactPoint).Size();
+
+			 if (TraceHit.GetActor() != InteractionData.CurrentInteractable && Distance <= InteractionCheckDistance) 
+			 {
+				 FoundInteractable(TraceHit.GetActor());
+				 return;
+			 }
+			 
+			 if (TraceHit.GetActor() == InteractionData.CurrentInteractable) 
+			 {
+				 return;
+			 }
+		 }
+	}
+
+	NoInteractableFound();
+}
+
+void AInventorySystemCharacter::FoundInteractable(AActor* NewInteractable)
+{
+
+}
+
+void AInventorySystemCharacter::NoInteractableFound()
+{
+
+}
+
+void AInventorySystemCharacter::BeginInteract()
+{
+
+}
+
+void AInventorySystemCharacter::EndInteract()
+{
+
+}
+
+void AInventorySystemCharacter::Interact()
+{
 
 }
 
