@@ -117,57 +117,134 @@ void AInventorySystemCharacter::PerformInteractionCheck()
 	FVector TraceStart {GetPawnViewLocation()};
 	FVector TraceEnd {TraceStart + (GetViewRotation().Vector() * InteractionCheckDistance)};
 
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 1.f, 0, 2.f);
+	float LookDirection = FVector::DotProduct(GetActorForwardVector(), GetViewRotation().Vector());
 
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this);
-	FHitResult TraceHit;
+	if (LookDirection > 0 )
+	{
+		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 1.f, 0, 2.f);
 
-	if (GetWorld()->LineTraceSingleByChannel(TraceHit, TraceStart, TraceEnd, ECC_Visibility, QueryParams)) 
-	{ 
-		 if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass())) 
-		 {
-			 const float Distance = (TraceStart - TraceHit.ImpactPoint).Size();
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(this);
+		FHitResult TraceHit;
 
-			 if (TraceHit.GetActor() != InteractionData.CurrentInteractable && Distance <= InteractionCheckDistance) 
-			 {
-				 FoundInteractable(TraceHit.GetActor());
-				 return;
-			 }
-			 
-			 if (TraceHit.GetActor() == InteractionData.CurrentInteractable) 
-			 {
-				 return;
-			 }
-		 }
+		if (GetWorld()->LineTraceSingleByChannel(TraceHit, TraceStart, TraceEnd, ECC_Visibility, QueryParams))
+		{
+			if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
+			{
+				const float Distance = (TraceStart - TraceHit.ImpactPoint).Size();
+
+				if (TraceHit.GetActor() != InteractionData.CurrentInteractable && Distance <= InteractionCheckDistance)
+				{
+					FoundInteractable(TraceHit.GetActor());
+					return;
+				}
+
+				if (TraceHit.GetActor() == InteractionData.CurrentInteractable)
+				{
+					return;
+				}
+			}
+		}
+
+		NoInteractableFound();
 	}
-
-	NoInteractableFound();
 }
 
 void AInventorySystemCharacter::FoundInteractable(AActor* NewInteractable)
 {
+	//The check ensures that the previous interaction doesn't interfere with the new one. 
+	if (IsInteracting()) 
+	{
+		EndInteract();
+	}
 
+	//The check ensures that the previous interaction doesn't interfere with the new one.
+	if (InteractionData.CurrentInteractable) 
+	{
+		TargetInteractable = InteractionData.CurrentInteractable;
+		TargetInteractable->EndFocus();
+	}
+
+	InteractionData.CurrentInteractable = NewInteractable;
+	TargetInteractable = NewInteractable;
+
+	TargetInteractable->BeginFocus();
 }
 
 void AInventorySystemCharacter::NoInteractableFound()
 {
+	//resetting timer from previous interaction
+	if (IsInteracting())
+	{
+		GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
+	}
 
+	if (InteractionData.CurrentInteractable) 
+	{
+		if (IsValid(TargetInteractable.GetObject()))
+		{
+			TargetInteractable->EndFocus();
+		}
+
+		// TODO : hide interaction widget on the HUD
+
+		//resetting InteractableItem
+		InteractionData.CurrentInteractable = nullptr;
+		TargetInteractable = nullptr;
+
+	}
 }
 
 void AInventorySystemCharacter::BeginInteract()
 {
+	//It's safe check to make sure nothing hasn't been changed since beginning interaction (making sure we're looking at the same thing)
+	PerformInteractionCheck();
 
+	if (InteractionData.CurrentInteractable) 
+	{
+		if (IsValid(TargetInteractable.GetObject())) 
+		{
+			TargetInteractable->BeginInteract();
+
+			//handling the delay for interactions 
+			if (FMath::IsNearlyZero(TargetInteractable->InteractableData.InteractionDuration, 0.1f))
+			{	
+				//If there's no InteractionDuration, we call Interact immediately  
+				Interact();
+			}
+			else 
+			{
+				//If there's InteractionDuration, we call Interact after certain delay that greater than 0.1f 
+				GetWorldTimerManager().SetTimer (
+					TimerHandle_Interaction,
+					this,
+					&AInventorySystemCharacter::Interact,
+					TargetInteractable->InteractableData.InteractionDuration,
+					false
+				);
+			}
+		}
+	}
 }
 
 void AInventorySystemCharacter::EndInteract()
 {
+	GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
 
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		TargetInteractable->EndInteract();
+	}
 }
 
 void AInventorySystemCharacter::Interact()
 {
+	GetWorldTimerManager().ClearTimer(TimerHandle_Interaction);
 
+	if (IsValid(TargetInteractable.GetObject()))
+	{
+		TargetInteractable->Interact();
+	}
 }
 
 void AInventorySystemCharacter::Move(const FInputActionValue& Value)

@@ -54,6 +54,7 @@ public:
 	AInventorySystemCharacter();
 	virtual void Tick(float DeltaSeconds) override;
 
+
 protected:
 	
 	//==================================================================================
@@ -119,5 +120,7 @@ public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	FORCEINLINE bool IsInteracting() const { return GetWorldTimerManager().IsTimerActive(TimerHandle_Interaction); }
 };
 
