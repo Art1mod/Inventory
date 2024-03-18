@@ -105,6 +105,10 @@ void AInventorySystemCharacter::SetupPlayerInputComponent(class UInputComponent*
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AInventorySystemCharacter::Look);
+		
+		//Interacting
+		EnhancedInputComponent->BindAction(BeginInteractAction, ETriggerEvent::Triggered, this, &AInventorySystemCharacter::BeginInteract);
+		EnhancedInputComponent->BindAction(EndInteractAction, ETriggerEvent::Triggered, this, &AInventorySystemCharacter::EndInteract);
 
 	}
 

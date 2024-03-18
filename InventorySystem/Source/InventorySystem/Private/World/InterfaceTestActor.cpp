@@ -26,27 +26,33 @@ void AInterfaceTestActor::BeginPlay()
 
 void AInterfaceTestActor::BeginFocus()
 {
-
+	if (Mesh) 
+	{
+		Mesh->SetRenderCustomDepth(true);
+	}
 }
 
 void AInterfaceTestActor::EndFocus()
 {
-
+	if (Mesh)
+	{
+		Mesh->SetRenderCustomDepth(false);
+	}
 }
 
 void AInterfaceTestActor::BeginInteract()
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("BeginInteract override on InterfaceTestActor is called"))
 }
 
 void AInterfaceTestActor::EndInteract()
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("EndInteract override on InterfaceTestActor is called"))
 }
 
 void AInterfaceTestActor::Interact()
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("Interact override on InterfaceTestActor is called"))
 }
 
 
