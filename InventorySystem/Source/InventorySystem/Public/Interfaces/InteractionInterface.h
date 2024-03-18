@@ -70,19 +70,19 @@ class INVENTORYSYSTEM_API IInteractionInterface
 public:
 
 	//It's used for notification that you're focusing on an object but you haven't done anything with it
-	virtual void BeginFocus();
+	virtual void BeginFocus() = 0;
 
 	//It's used for notification that you're not focusing on an object anymore
-	virtual void EndFocus();
+	virtual void EndFocus() = 0;
 
 	//It's used for time interactions (opening door by holding button, etc.). It establishes beginning of interaction
-	virtual void BeginInteract();
+	virtual void BeginInteract() = 0;
 	
 	//It's used for time interactions (opening door by holding button, etc.). It establishes ending of interaction
-	virtual void EndInteract();
+	virtual void EndInteract() = 0;
 	
 	//The interaction with objects happens right here.
-	virtual void Interact();
+	virtual void Interact() = 0;
 
 	FInteractableData InteractableData;
 };
