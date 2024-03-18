@@ -6,6 +6,9 @@
 #include "UObject/Interface.h"
 #include "InteractionInterface.generated.h"
 
+
+class AInventorySystemCharacter;
+
 UENUM()
 enum class EInteractableType: uint8 
 {
@@ -81,8 +84,9 @@ public:
 	//It's used for time interactions (opening door by holding button, etc.). It establishes ending of interaction
 	virtual void EndInteract() = 0;
 	
+	//
 	//The interaction with objects happens right here.
-	virtual void Interact() = 0;
+	virtual void Interact(AInventorySystemCharacter* PlayerCharacter) = 0;
 
 	FInteractableData InteractableData;
 };
