@@ -2,6 +2,7 @@
 
 //game
 #include "Character/InventorySystemCharacter.h"
+#include "UserInterface/InventorySystemHUD.h"
 
 
 //engine 
@@ -86,6 +87,10 @@ void AInventorySystemCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	//
+	//Linking C++ and editor HUDs
+	HUD = Cast<AInventorySystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -171,6 +176,9 @@ void AInventorySystemCharacter::FoundInteractable(AActor* NewInteractable)
 	InteractionData.CurrentInteractable = NewInteractable;
 	TargetInteractable = NewInteractable;
 
+	//
+	HUD->UpdateInteractionWidget(&TargetInteractable->InteractableData);
+
 	TargetInteractable->BeginFocus();
 }
 
@@ -189,7 +197,8 @@ void AInventorySystemCharacter::NoInteractableFound()
 			TargetInteractable->EndFocus();
 		}
 
-		// TODO : hide interaction widget on the HUD
+		//
+		HUD->HideInteractionWidget();
 
 		//resetting InteractableItem
 		InteractionData.CurrentInteractable = nullptr;

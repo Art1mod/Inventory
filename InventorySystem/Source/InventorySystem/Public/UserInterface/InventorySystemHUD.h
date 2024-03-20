@@ -45,12 +45,13 @@ public:
 	void HideMenu();
 
 	//It's called by other classes when you gonna look at an interactable
-	void ShowInteractionWidget();
+	void ShowInteractionWidget() const;
 
 	//It's called by other classes when you gonna look away of an interactable
-	void HideInteractionWidget();
+	void HideInteractionWidget() const;
 
-	void UpdateInteractionWidget(const FInteractableData* InteractableData);
+	//Call it when you need to update interaction widget
+	void UpdateInteractionWidget(const FInteractableData* InteractableData) const;
 
 protected:
 	

@@ -12,6 +12,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class AInventorySystemHUD;
 
 //Info about the interaction process
 USTRUCT()
@@ -84,6 +85,11 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* EndInteractAction;
+
+	//
+	//Reference to the HUD
+	UPROPERTY()
+	AInventorySystemHUD* HUD;
 
 	//It's what we hitting and processing throught the line trace. The target we're looking for
 	UPROPERTY(VisibleAnywhere, Category = "Character | Interaction")

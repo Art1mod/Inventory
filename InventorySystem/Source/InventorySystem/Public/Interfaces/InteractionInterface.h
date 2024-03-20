@@ -72,6 +72,15 @@ class INVENTORYSYSTEM_API IInteractionInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
+	//==================================================================================
+	// PROPERTIES & VARIABLES
+	//==================================================================================
+	
+	FInteractableData InteractableData;
+	
+	//==================================================================================
+	// FUNCTIONS
+	//==================================================================================
 	//It's used for notification that you're focusing on an object but you haven't done anything with it
 	virtual void BeginFocus() = 0;
 
@@ -88,5 +97,5 @@ public:
 	//The interaction with objects happens right here.
 	virtual void Interact(AInventorySystemCharacter* PlayerCharacter) = 0;
 
-	FInteractableData InteractableData;
+	
 };

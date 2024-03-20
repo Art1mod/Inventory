@@ -6,6 +6,11 @@
 #include "Blueprint/UserWidget.h"
 #include "InteractionWidget.generated.h"
 
+class AInventorySystemCharacter;
+struct FInteractableData;
+class UTextBlock;
+class UProgressBar;
+
 /**
  * 
  */
@@ -13,5 +18,54 @@ UCLASS()
 class INVENTORYSYSTEM_API UInteractionWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+
+	//==================================================================================
+	// PROPERTIES & VARIABLES
+	//==================================================================================
 	
+	UPROPERTY(VisibleAnywhere, Category = "Interaction Widget | Player Reference")
+	AInventorySystemCharacter* PlayerCharacter;
+	
+	//==================================================================================
+	// FUNCTIONS
+	//==================================================================================
+	
+	void UpdateWidget(const FInteractableData* InteractableData) const;
+
+protected:
+
+	//==================================================================================
+	// PROPERTIES & VARIABLES
+	//==================================================================================
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Interaction Widget | Interactable Data")
+	UTextBlock* NameText;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Interaction Widget | Interactable Data")
+	UTextBlock* ActionText;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Interaction Widget | Interactable Data")
+	UTextBlock* QuantityText;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Interaction Widget | Interactable Data")
+	UTextBlock* KeyPressText;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Interaction Widget | Interactable Data")
+	UProgressBar* InteractionProgressBar;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Interaction Widget | Interactable Data")
+	float CurrentInteractionDuration;
+
+	//==================================================================================
+	// FUNCTIONS
+	//==================================================================================
+
+	//this way the progress bar knows how much to fill up
+	UFUNCTION(Category = "Interaction Widget | Interactable Data")
+	float UpdateInteractionProgress();
+
+	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
 };

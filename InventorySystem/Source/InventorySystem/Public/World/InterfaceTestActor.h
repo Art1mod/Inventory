@@ -36,6 +36,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Test Actor")
 	UStaticMeshComponent* Mesh;
 
+	//Just for testing widget functionality 
+	UPROPERTY(EditInstanceOnly, Category = "Test Actor")
+	FInteractableData InstanceInteractableData;
+
 	//==================================================================================
 	// FUNCTIONS
 	//==================================================================================
