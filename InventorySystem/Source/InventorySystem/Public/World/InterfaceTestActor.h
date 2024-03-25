@@ -26,7 +26,7 @@ public:
 
 	AInterfaceTestActor();
 	virtual void Tick(float DeltaTime) override;
-	
+
 protected:
 	
 	//==================================================================================
@@ -51,7 +51,6 @@ protected:
 	virtual void BeginInteract() override;
 	virtual void EndInteract() override;
 
-	//
 	virtual void Interact(AInventorySystemCharacter* PlayerCharacter) override;
 
 

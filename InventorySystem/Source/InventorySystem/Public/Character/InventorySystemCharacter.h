@@ -86,7 +86,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* EndInteractAction;
 
-	//
 	//Reference to the HUD
 	UPROPERTY()
 	AInventorySystemHUD* HUD;

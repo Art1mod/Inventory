@@ -31,35 +31,27 @@ public:
 	//UPROPERTY()
 	//UInventoryComponent* OwningInventory;
 
-	//
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	int32 Quantity; 
 
-	//
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FName ItemID;
 
-	//
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	EItemType ItemType;
 
-	//
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	EItemQuality ItemQuality;
 
-	//
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FItemStatistics ItemStatistics;
 
-	//
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FItemTextData ItemTextData;
 
-	//
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FItemNumericData ItemNumericData;
 
-	//
 	UPROPERTY(VisibleAnywhere, Category = "Item")
 	FItemAssetData ItemAssetData;
 

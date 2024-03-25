@@ -50,6 +50,5 @@ void UItemBase::Use(AInventorySystemCharacter* Character)
 
 bool UItemBase::operator==(const FName& OtherID) const
 {
-	//
 	return this->ItemID == OtherID;	
 }

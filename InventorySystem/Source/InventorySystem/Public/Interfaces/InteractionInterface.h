@@ -82,18 +82,17 @@ public:
 	// FUNCTIONS
 	//==================================================================================
 	//It's used for notification that you're focusing on an object but you haven't done anything with it
-	virtual void BeginFocus() = 0;
+	virtual void BeginFocus();
 
 	//It's used for notification that you're not focusing on an object anymore
-	virtual void EndFocus() = 0;
+	virtual void EndFocus();
 
 	//It's used for time interactions (opening door by holding button, etc.). It establishes beginning of interaction
-	virtual void BeginInteract() = 0;
+	virtual void BeginInteract();
 	
 	//It's used for time interactions (opening door by holding button, etc.). It establishes ending of interaction
-	virtual void EndInteract() = 0;
+	virtual void EndInteract();
 	
-	//
 	//The interaction with objects happens right here.
 	virtual void Interact(AInventorySystemCharacter* PlayerCharacter) = 0;
 

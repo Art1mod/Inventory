@@ -88,7 +88,6 @@ void AInventorySystemCharacter::BeginPlay()
 		}
 	}
 
-	//
 	//Linking C++ and editor HUDs
 	HUD = Cast<AInventorySystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 }
@@ -140,7 +139,6 @@ void AInventorySystemCharacter::PerformInteractionCheck()
 		{
 			if (TraceHit.GetActor()->GetClass()->ImplementsInterface(UInteractionInterface::StaticClass()))
 			{
-				//
 				if (TraceHit.GetActor() != InteractionData.CurrentInteractable)
 				{
 					FoundInteractable(TraceHit.GetActor());
@@ -176,7 +174,6 @@ void AInventorySystemCharacter::FoundInteractable(AActor* NewInteractable)
 	InteractionData.CurrentInteractable = NewInteractable;
 	TargetInteractable = NewInteractable;
 
-	//
 	HUD->UpdateInteractionWidget(&TargetInteractable->InteractableData);
 
 	TargetInteractable->BeginFocus();
@@ -197,7 +194,6 @@ void AInventorySystemCharacter::NoInteractableFound()
 			TargetInteractable->EndFocus();
 		}
 
-		//
 		HUD->HideInteractionWidget();
 
 		//resetting InteractableItem
@@ -255,7 +251,6 @@ void AInventorySystemCharacter::Interact()
 
 	if (IsValid(TargetInteractable.GetObject()))
 	{
-		//
 		TargetInteractable->Interact(this);
 	}
 }

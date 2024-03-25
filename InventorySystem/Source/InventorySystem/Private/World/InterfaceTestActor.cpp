@@ -22,7 +22,6 @@ void AInterfaceTestActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//
 	//setting it that way we provide info about interactable in the editor and set its c++ representation after it 
 	InteractableData = InstanceInteractableData;
 
