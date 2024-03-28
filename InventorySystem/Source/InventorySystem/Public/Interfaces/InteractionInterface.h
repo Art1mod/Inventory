@@ -81,6 +81,8 @@ public:
 	//==================================================================================
 	// FUNCTIONS
 	//==================================================================================
+	
+
 	//It's used for notification that you're focusing on an object but you haven't done anything with it
 	virtual void BeginFocus();
 

@@ -84,6 +84,8 @@ public:
 
 protected:
 	
+	//
+	//it used in InventoryComponent to compare items
 	bool operator == (const FName& OtherID) const;
 	
 
